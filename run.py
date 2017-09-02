@@ -10,10 +10,6 @@ import filething
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger()
 
-logging.getLogger('aiohttp.internal').setLevel(logging.DEBUG)
-logging.getLogger('aiohttp.server').setLevel(logging.DEBUG)
-logging.getLogger('aiohttp.web').setLevel(logging.DEBUG)
-
 if __name__ == '__main__':
     app = web.Application()
     loop = asyncio.get_event_loop()
