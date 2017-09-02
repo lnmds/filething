@@ -29,7 +29,7 @@ class Server:
         self.ready = True
         log.info('Ready!')
 
-    async def request_file(request):
+    async def request_file(self, request):
         """This is really insecure, you can
         request other stuff from the server
         because I do not fucking check the data
@@ -46,7 +46,7 @@ class Server:
     async def generate_fileid(self):
         return ''.join((f'{random.choice(string.ascii_letters + string.digits)}' for i in range(6)))
 
-    async def upload(request):
+    async def upload(self, request):
         reader = await request.multipart()
 
         sentfile = await reader.next()
