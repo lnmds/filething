@@ -43,7 +43,7 @@ class Server:
         except FileNotFoundError:
             return web.Response(status=404, text='Not Found')
 
-    async def generate_fileid(self):
+    def generate_fileid(self):
         return ''.join((f'{random.choice(string.ascii_letters + string.digits)}' for i in range(6)))
 
     async def upload(self, request):
