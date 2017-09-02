@@ -30,13 +30,15 @@ class Server:
         log.info('Ready!')
 
     async def request_file(self, request):
-        """This is really insecure, you can
-        request other stuff from the server
-        because I do not fucking check the data
-        given in it aAAA.
+        """`GET /i/{filename}`.
+        
+        Request a file from the server.
 
+        This handler is `insecure` meaning it
+        doesn't do any checking to the input provided by the user.
         """
-        imagepath = request.match_info['image']
+        imagepath = request.match_info['filename']
+        log.info('Requesting %r', imagepath)
 
         try:
             return web.FileResponse(f'./filething-images/{imagepath}')
@@ -44,9 +46,13 @@ class Server:
             return web.Response(status=404, text='Not Found')
 
     def generate_fileid(self):
-        return ''.join((f'{random.choice(string.ascii_letters + string.digits)}' for i in range(6)))
+        return ''.join((f'{random.choice(string.ascii_letters)}' for i in range(7)))
 
     async def upload(self, request):
+        """`POST /upload`.
+        
+        Upload a file using Multipart.
+        """
         reader = await request.multipart()
 
         sentfile = await reader.next()
@@ -54,6 +60,8 @@ class Server:
         extension = sentfile.filename.split('.')[-1]
         filename = f'{self.generate_fileid()}.{extension}'
 
+        # Yes, aiohttp is shit, I know that.
+        # This is quite shitty.
         size = 0
         with open(f'./filething-images/{filename}', 'wb') as f:
             while True:
@@ -63,8 +71,15 @@ class Server:
                 size += len(chunk)
                 f.write(chunk)
 
+        log.info('Got file %r, with %d bytes, %.2f MB', filename, size, size/1024/1024)
+
         return web.json_response({
+            # :^)
             'bytes': size,
+            'kb': size / 1024,
+            'mb': size / 1024 / 1024,
+
+            # actual file data
             'id': filename,
             'url': f'{self.config["url"]}/i/{filename}',
         })
@@ -79,8 +94,9 @@ class Server:
         """
         r = self.app.router
 
-        r.add_get('/i/{image}', self.request_file)
+        r.add_static('/s', './static')
         r.add_post('/upload', self.upload)
+        r.add_get('/i/{filename:.+}', self.request_file)
 
         handler = self.app.make_handler()
         f = self.loop.create_server(handler, \
