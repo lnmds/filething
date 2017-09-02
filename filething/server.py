@@ -43,7 +43,7 @@ class Server:
         try:
             return web.FileResponse(f'./filething-images/{imagepath}')
         except FileNotFoundError:
-            return web.Response(status=404, text='Not Found')
+            return web.Response(status=404, text='File Not Found')
 
     def generate_fileid(self):
         return ''.join((f'{random.choice(string.ascii_letters)}' for i in range(7)))
