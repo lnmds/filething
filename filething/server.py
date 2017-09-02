@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 
 class Server:
     """Main Filething server class.
-    
+
     This class holds all the server state to continue operating
 
     Attributes
@@ -34,13 +34,13 @@ class Server:
         request other stuff from the server
         because I do not fucking check the data
         given in it aAAA.
-        
+
         """
         imagepath = request.match_info['image']
 
         try:
-            return web.FileResponse(f'./filething-images/{filepath}')
-        except FileNotfoundError:
+            return web.FileResponse(f'./filething-images/{imagepath}')
+        except FileNotFoundError:
             return web.Response(status=404, text='Not Found')
 
     async def generate_fileid(self):
