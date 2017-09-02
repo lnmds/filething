@@ -77,7 +77,7 @@ class Server:
         RuntimeError
             If the server is not ready for startup.
         """
-        r = app.router
+        r = self.app.router
 
         r.add_get('/i/{image}', self.request_file)
         r.add_post('/upload', self.upload)
