@@ -38,7 +38,6 @@ class Server:
         doesn't do any checking to the input provided by the user.
         """
         imagepath = request.match_info['filename']
-        log.info('Requesting %r', imagepath)
 
         try:
             return web.FileResponse(f'./filething-images/{imagepath}')
@@ -71,7 +70,7 @@ class Server:
                 size += len(chunk)
                 f.write(chunk)
 
-        log.info('Got file %r, with %d bytes, %.2f MB', filename, size, size/1024/1024)
+        log.info('[upload] Got file %r, with %d bytes, %.2f MB', filename, size, size/1024/1024)
 
         return web.json_response({
             # :^)
