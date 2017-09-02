@@ -1,5 +1,4 @@
 import logging
-import sys
 import configparser
 import asyncio
 
@@ -7,11 +6,9 @@ from aiohttp import web
 
 import filething
 
+# configure logging
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger()
-
-async def hello(request):
-    return web.Response(text="Welcome to a filething server. https://github.com/lnmds/filething")
 
 if __name__ == '__main__':
     app = web.Application()
@@ -22,7 +19,6 @@ if __name__ == '__main__':
 
     filething = filething.Server(loop, app, config)
 
-    app.router.add_get('/', hello)
+    app.router.add_static('/', './static')
 
     filething.run()
-
